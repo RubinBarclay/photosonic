@@ -1,10 +1,18 @@
 import { Camera } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
   const [cameraAccess, setCameraAccess] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [picture, setPicture] = useState(null);
   const cameraRef = useRef(null);
 
@@ -19,15 +27,35 @@ export default function App() {
 
   const takePicture = async () => {
     const picture = await cameraRef.current.takePictureAsync();
-    setPicture(picture.uri);
-    console.log(picture);
+    setPicture(picture);
+    setShowPreview(true);
+  };
+
+  const closePreview = () => {
+    setPicture(null);
+    setShowPreview(false);
   };
 
   return cameraAccess ? (
     <View style={styles.container}>
-      <Camera style={styles.camera} ref={cameraRef}>
-        <TouchableOpacity style={styles.cameraBtn} onPress={takePicture} />
-      </Camera>
+      {showPreview && picture ? (
+        <ImageBackground style={{ flex: 1, width: "100%" }} source={picture}>
+          <TouchableOpacity style={styles.retakeBtn} onPress={closePreview}>
+            <Text style={{ fontSize: 18 }}>
+              <Ionicons name="close" size={16} /> Retake
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.searchBtn}>
+            <Text style={{ fontSize: 18 }}>
+              Find song <Ionicons name="musical-notes" size={16} />
+            </Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      ) : (
+        <Camera style={styles.camera} ref={cameraRef}>
+          <TouchableOpacity style={styles.cameraBtn} onPress={takePicture} />
+        </Camera>
+      )}
       <StatusBar style="auto" />
     </View>
   ) : (
@@ -72,5 +100,23 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     margin: 10,
+  },
+  retakeBtn: {
+    position: "absolute",
+    bottom: 10,
+    left: 15,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  searchBtn: {
+    position: "absolute",
+    bottom: 10,
+    right: 15,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
 });
