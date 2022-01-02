@@ -1,6 +1,7 @@
 {
   "googleCloud": {
-    "api": "https://vision.googleapis.com/v1/images:annotate?key=",
+    "translateApi": "https://translation.googleapis.com/language/translate/v2?key=",
+    "cloudVisionApi": "https://vision.googleapis.com/v1/images:annotate?key=",
     "apiKey": "AIzaSyAmXvr-fHVssYqYWp_BS1ZRqDWSqqpKteg"
   }
 }

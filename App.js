@@ -17,6 +17,9 @@ export default function App() {
   const [showPreview, setShowPreview] = useState(false);
   const [picture, setPicture] = useState(null);
   const [base64, setBase64] = useState(null);
+  const [identifiedObject, setIdentifiedObject] = useState("");
+  const [translatedObject, setTranslatedObject] = useState("");
+
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -30,30 +33,25 @@ export default function App() {
 
   const takePicture = async () => {
     const picture = await cameraRef.current.takePictureAsync();
-    const resizedPhoto = await ImageManipulator.manipulateAsync(
+    const manipulatedPicture = await ImageManipulator.manipulateAsync(
       picture.uri,
-      [],
-      // [{ resize: { width: 300 } }], // resize to width of 300 and preserve aspect ratio
+      [], // [{ resize: { width: 300 } }],
       { base64: true, compress: 0.65, format: "jpeg" }
     );
-    // console.log(Object.keys(resizedPhoto)); // { height, width, uri, base64}
-    // console.log(resizedPhoto);
-    setPicture(resizedPhoto);
-    setBase64(resizedPhoto.base64);
+    setPicture(picture);
+    setBase64(manipulatedPicture.base64);
     setShowPreview(true);
   };
 
   const closePreview = () => {
     setPicture(null);
     setShowPreview(false);
+    setIdentifiedObject("");
   };
 
   const callGoogleCloudVision = async () => {
-    // const base64 = await FileSystem.readAsStringAsync(picture.uri, {
-    //   encoding: "base64",
-    // });
     const response = await fetch(
-      config.googleCloud.api + config.googleCloud.apiKey,
+      config.googleCloud.cloudVisionApi + config.googleCloud.apiKey,
       {
         method: "POST",
         body: JSON.stringify({
@@ -62,18 +60,7 @@ export default function App() {
               image: {
                 content: base64,
               },
-              features: [
-                { type: "LABEL_DETECTION", maxResults: 3 },
-                // { type: "LANDMARK_DETECTION", maxResults: 5 },
-                // { type: "FACE_DETECTION", maxResults: 5 },
-                // { type: "LOGO_DETECTION", maxResults: 5 },
-                // { type: "TEXT_DETECTION", maxResults: 5 },
-                // { type: "DOCUMENT_TEXT_DETECTION", maxResults: 5 },
-                // { type: "SAFE_SEARCH_DETECTION", maxResults: 5 },
-                // { type: "IMAGE_PROPERTIES", maxResults: 5 },
-                // { type: "CROP_HINTS", maxResults: 5 },
-                // { type: "WEB_DETECTION", maxResults: 5 },
-              ],
+              features: [{ type: "LABEL_DETECTION", maxResults: 1 }],
             },
           ],
         }),
@@ -81,14 +68,39 @@ export default function App() {
     );
 
     const data = await response.json();
+    setIdentifiedObject(data.responses[0].labelAnnotations[0].description);
+    console.log(data.responses[0].labelAnnotations[0].description);
+    translateWord(data.responses[0].labelAnnotations[0].description);
+  };
 
-    console.log(data.responses);
+  const translateWord = async (identifiedObject) => {
+    const baseURL = config.googleCloud.translateApi;
+    // const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=${translateLanguage}&source=en`;
+    const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=sv&source=en`;
+    // const response = await fetch(
+    //   `${config.googleCloud.translateApi}${config.googleCloud.apiKey}&q=${identifiedObject}&target=${translateLanguage}&source=en`,
+    const response = await fetch(baseURL + params, {
+      method: "POST",
+      // body: JSON.stringify({})
+    });
+
+    const data = await response.json();
+    setTranslatedObject(data.data.translations[0].translatedText);
+    console.log(data.data.translations[0].translatedText);
   };
 
   return cameraAccess ? (
     <View style={styles.container}>
       {showPreview && picture ? (
-        <ImageBackground style={{ flex: 1, width: "100%" }} source={picture}>
+        <ImageBackground
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+          source={picture}
+        >
           <TouchableOpacity style={styles.retakeBtn} onPress={closePreview}>
             <Text style={{ fontSize: 18 }}>
               <Ionicons name="close" size={16} /> Retake
@@ -99,9 +111,37 @@ export default function App() {
             onPress={callGoogleCloudVision}
           >
             <Text style={{ fontSize: 18 }}>
-              Find song <Ionicons name="musical-notes" size={16} />
+              {/* Find song <Ionicons name="musical-notes" size={16} /> */}
+              Identify <Ionicons name="search" size={16} />
             </Text>
           </TouchableOpacity>
+          {identifiedObject !== "" && translatedObject !== "" && (
+            <>
+              <Text
+                style={{
+                  fontSize: 20,
+                  paddingVertical: 6,
+                  paddingHorizontal: 10,
+                  backgroundColor: "#222",
+                  borderRadius: 8,
+                }}
+              >
+                {identifiedObject}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  paddingVertical: 6,
+                  paddingHorizontal: 10,
+                  backgroundColor: "#222",
+                  borderRadius: 8,
+                  marginTop: 12,
+                }}
+              >
+                {translatedObject}
+              </Text>
+            </>
+          )}
         </ImageBackground>
       ) : (
         <Camera style={styles.camera} ref={cameraRef}>
