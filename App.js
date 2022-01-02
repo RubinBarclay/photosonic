@@ -2,15 +2,19 @@ import { Camera } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useRef, useState } from "react";
 import {
+  Button,
   ImageBackground,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImageManipulator from "expo-image-manipulator";
+import styles from "./App.styles.js";
 import config from "./config.json";
+
+// import { NavigationContainer } from "@react-navigation/native";
+// import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function App() {
   const [cameraAccess, setCameraAccess] = useState(false);
@@ -164,51 +168,62 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  camera: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    width: "100%",
-  },
-  cameraBtn: {
-    width: 80,
-    height: 80,
-    marginBottom: 20,
-    // backgroundColor: "#FFF",
-    borderRadius: 100,
-    borderWidth: 5,
-    borderColor: "#FFF",
-  },
-  requestPermission: {
-    backgroundColor: "#DDD",
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    margin: 10,
-  },
-  retakeBtn: {
-    position: "absolute",
-    bottom: 10,
-    left: 15,
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  searchBtn: {
-    position: "absolute",
-    bottom: 10,
-    right: 15,
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-});
+// // ONLY FOR LEARNING BUCKO
+
+// function Bong({ route, navigation }) {
+//   const { msg } = route.params;
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Bong bing</Text>
+//       <Text>Message: {JSON.stringify(msg)}</Text>
+//       <Button
+//         title="Go Bing"
+//         onPress={() =>
+//           navigation.navigate("Bing", {
+//             msg: "Facka u Bing! I hate all u Bongs!",
+//           })
+//         }
+//       />
+//     </View>
+//   );
+// }
+
+// function Bing({ route, navigation }) {
+//   const { msg } = route.params;
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Bing bong</Text>
+//       <Text>Message: {msg}</Text>
+//       <Button
+//         title="Go Bong"
+//         onPress={() =>
+//           navigation.navigate("Bong", { msg: "Why u no Bing, Bong?!" })
+//         }
+//       />
+//     </View>
+//   );
+// }
+
+// export default function App() {
+//   const Stack = createNativeStackNavigator();
+
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator
+//         initialRouteName="Bing"
+//         screenOptions={{ headerShown: false }}
+//       >
+//         <Stack.Screen
+//           name="Bing"
+//           component={Bing}
+//           initialParams={{ msg: "" }}
+//         />
+//         <Stack.Screen
+//           name="Bong"
+//           component={Bong}
+//           initialParams={{ msg: "" }}
+//         />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// }
