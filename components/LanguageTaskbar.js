@@ -1,32 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 
-function LanguageTaskbar({ navigation }) {
-  const [active, setActive] = useState("from");
-
+function LanguageTaskbar({ languageInfo, mode, setMode }) {
   return (
     <View style={styles.taskbar}>
       <TouchableOpacity
-        onPress={() => setActive("from")}
+        onPress={() => setMode("from")}
         style={{
           ...styles.tab,
-          backgroundColor: active === "from" ? null : "#333",
+          backgroundColor: mode === "from" ? "#333" : null,
           // opacity: active === "from" ? 1 : 0.5,
         }}
       >
         <Text style={styles.textSmall}>From</Text>
-        <Text style={styles.textLarge}>English</Text>
+        <Text style={styles.textLarge} numberOfLines={1}>
+          {languageInfo.from[0].toUpperCase()}
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => setActive("to")}
+        onPress={() => setMode("to")}
         style={{
           ...styles.tab,
-          backgroundColor: active === "to" ? null : "#333",
+          backgroundColor: mode === "to" ? "#333" : null,
           // opacity: active === "to" ? 1 : 0.5,
         }}
       >
         <Text style={styles.textSmall}>To</Text>
-        <Text style={styles.textLarge}>Swedish</Text>
+        <Text style={styles.textLarge} numberOfLines={1}>
+          {languageInfo.to[0].toUpperCase()}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -42,15 +44,12 @@ const styles = StyleSheet.create({
 
     flex: 1,
     flexDirection: "row",
-    // justifyContent: "space-between",
-    // alignItems: "center",
-    // backgroundColor: "white",
-    // backgroundColor: "#333",
   },
   tab: {
-    flexGrow: 1,
+    // flexGrow: 1,
+    width: "50%",
     paddingTop: 12,
-    // backgroundColor: "#333",
+    paddingHorizontal: 20,
   },
   smallTab: {
     backgroundColor: "orangered",

@@ -1,6 +1,7 @@
 import { Feather } from "@expo/vector-icons";
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import LanguageInfoContext from "../context/languageInfoContext.js";
 
 function Taskbar({
   navigation,
@@ -9,11 +10,18 @@ function Taskbar({
   closePreview,
   identify,
 }) {
+  const { languageInfo } = useContext(LanguageInfoContext);
   return (
     <View style={styles.taskbar}>
       <TouchableOpacity onPress={() => navigation.navigate("Languages")}>
         <Text style={styles.btn}>
-          EN <Feather name="arrow-right" size={16} /> SV
+          {languageInfo.from[2] // Third item check is error handling for chinese
+            ? languageInfo.from[2].toUpperCase()
+            : languageInfo.from[1].toUpperCase()}
+          <Feather name="arrow-right" size={16} />{" "}
+          {languageInfo.to[2] // Third item check is error handling for chinese
+            ? languageInfo.to[2].toUpperCase()
+            : languageInfo.to[1].toUpperCase()}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity

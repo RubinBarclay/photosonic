@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Camera as PhoneCamera } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./Camera.styles";
 import config from "../../config.json";

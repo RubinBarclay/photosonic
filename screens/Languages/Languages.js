@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
+// import { NavigationContainer } from "@react-navigation/native";
+import { useContext, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -10,25 +11,44 @@ import {
   TouchableOpacity,
 } from "react-native";
 import LanguageTaskbar from "../../components/LanguageTaskbar";
+import LanguageInfoContext from "../../context/languageInfoContext";
 import data from "./data";
 
-function Language({ info }) {
+function Language({ info, updateLanguage }) {
   return (
-    <View key={info[1]} style={styles.listItem}>
+    <TouchableOpacity
+      key={info[1]}
+      style={styles.listItem}
+      onPress={() => updateLanguage(info)}
+    >
       <Text>{info[0]}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
 function Languages({ navigation }) {
+  const [mode, setMode] = useState("from");
+  const { languageInfo, setLanguageInfo } = useContext(LanguageInfoContext);
+
+  const languageSelectHandler = (item) => {
+    setMode((prev) => (prev === "from" ? "to" : "from"));
+    setLanguageInfo((prev) => ({ ...prev, [mode]: item }));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={data}
-        renderItem={({ item }) => <Language info={item} />}
+        renderItem={({ item }) => (
+          <Language info={item} updateLanguage={languageSelectHandler} />
+        )}
         keyExtractor={(item) => item[1]}
       />
-      <LanguageTaskbar />
+      <LanguageTaskbar
+        mode={mode}
+        setMode={setMode}
+        languageInfo={languageInfo}
+      />
       <TouchableOpacity
         style={styles.closeBtn}
         onPress={() => navigation.navigate("Camera")}
