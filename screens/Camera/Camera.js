@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./Camera.styles";
 import config from "../../config.json";
-import Taskbar from "../../components/Taskbar";
+import CameraTaskbar from "../../components/CameraTaskbar";
 
 function Camera({ navigation }) {
   const [cameraAccess, setCameraAccess] = useState(false);
@@ -125,7 +125,7 @@ function Camera({ navigation }) {
       ) : (
         <PhoneCamera style={styles.camera} ref={cameraRef} />
       )}
-      <Taskbar
+      <CameraTaskbar
         navigation={navigation}
         showPreview={showPreview}
         takePicture={takePicture}
