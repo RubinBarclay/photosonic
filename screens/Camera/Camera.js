@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { Camera as PhoneCamera } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
@@ -6,6 +6,8 @@ import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./Camera.styles";
 import config from "../../config.json";
 import CameraTaskbar from "../../components/CameraTaskbar";
+import LanguageInfoContext from "../../context/languageInfoContext";
+import { useIsFocused } from "@react-navigation/core";
 
 function Camera({ navigation }) {
   const [cameraAccess, setCameraAccess] = useState(false);
@@ -15,7 +17,9 @@ function Camera({ navigation }) {
   const [identifiedObject, setIdentifiedObject] = useState("");
   const [translatedObject, setTranslatedObject] = useState("");
 
+  const { languageInfo } = useContext(LanguageInfoContext);
   const cameraRef = useRef(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     requestCameraAccess();
@@ -70,8 +74,8 @@ function Camera({ navigation }) {
 
   const translateWord = async (identifiedObject) => {
     const baseURL = config.googleCloud.translateApi;
-    // const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=${translateLanguage}&source=en`;
-    const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=sv&source=en`;
+    const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=${languageInfo.to[1]}&source=${languageInfo.from[1]}`;
+    // const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=sv&source=en`;
     // const response = await fetch(
     //   `${config.googleCloud.translateApi}${config.googleCloud.apiKey}&q=${identifiedObject}&target=${translateLanguage}&source=en`,
     const response = await fetch(baseURL + params, { method: "POST" });
@@ -121,15 +125,16 @@ function Camera({ navigation }) {
             </>
           )}
         </ImageBackground>
-      ) : (
+      ) : isFocused ? ( // isFocused unsures the camera mounts when navigating
         <PhoneCamera style={styles.camera} ref={cameraRef} />
-      )}
+      ) : null}
       <CameraTaskbar
         navigation={navigation}
         showPreview={showPreview}
         takePicture={takePicture}
         closePreview={closePreview}
         identify={callGoogleCloudVision}
+        languageInfo={languageInfo}
       />
       <StatusBar style="auto" />
     </View>
