@@ -34,7 +34,7 @@ function Camera({ navigation }) {
     const picture = await cameraRef.current.takePictureAsync();
     const manipulatedPicture = await ImageManipulator.manipulateAsync(
       picture.uri,
-      [], // [{ resize: { width: 300 } }],
+      [],
       { base64: true, compress: 0.65, format: "jpeg" }
     );
     setPicture(picture);
@@ -67,7 +67,6 @@ function Camera({ navigation }) {
     );
 
     const data = await response.json();
-    console.log(data.responses[0].labelAnnotations[0].description);
     setIdentifiedObject(data.responses[0].labelAnnotations[0].description);
     translateWord(data.responses[0].labelAnnotations[0].description);
   };
@@ -75,14 +74,10 @@ function Camera({ navigation }) {
   const translateWord = async (identifiedObject) => {
     const baseURL = config.googleCloud.translateApi;
     const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=${languageInfo.to[1]}&source=${languageInfo.from[1]}`;
-    // const params = `${config.googleCloud.apiKey}&q=${identifiedObject}&target=sv&source=en`;
-    // const response = await fetch(
-    //   `${config.googleCloud.translateApi}${config.googleCloud.apiKey}&q=${identifiedObject}&target=${translateLanguage}&source=en`,
     const response = await fetch(baseURL + params, { method: "POST" });
 
     const data = await response.json();
     setTranslatedObject(data.data.translations[0].translatedText);
-    console.log(data.data.translations[0].translatedText);
   };
 
   return cameraAccess ? (

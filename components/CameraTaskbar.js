@@ -1,7 +1,6 @@
+import React from "react";
 import { Feather } from "@expo/vector-icons";
-import React, { useContext } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import LanguageInfoContext from "../context/languageInfoContext.js";
 
 function Taskbar({
   navigation,
@@ -9,8 +8,8 @@ function Taskbar({
   takePicture,
   closePreview,
   identify,
+  languageInfo,
 }) {
-  const { languageInfo } = useContext(LanguageInfoContext);
   return (
     <View style={styles.taskbar}>
       <TouchableOpacity onPress={() => navigation.navigate("Languages")}>
