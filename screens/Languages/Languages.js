@@ -1,17 +1,16 @@
 import { Feather } from "@expo/vector-icons";
-// import { NavigationContainer } from "@react-navigation/native";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   SafeAreaView,
-  View,
   FlatList,
-  StyleSheet,
   Text,
-  StatusBar,
   TouchableOpacity,
+  TextInput,
+  View,
 } from "react-native";
 import LanguageTaskbar from "../../components/LanguageTaskbar";
 import LanguageInfoContext from "../../context/languageInfoContext";
+import styles from "./Languages.styles";
 import data from "./data";
 
 function Language({ info, updateLanguage }) {
@@ -26,63 +25,79 @@ function Language({ info, updateLanguage }) {
   );
 }
 
+function Header({
+  searchString,
+  searchHandler,
+  clearSearchHandler,
+  navigateBack,
+}) {
+  return (
+    <View style={styles.topBar}>
+      <TouchableOpacity style={styles.backBtn} onPress={navigateBack}>
+        <Feather name="arrow-left" size={32} />
+      </TouchableOpacity>
+      <TextInput
+        placeholder="Search"
+        style={styles.searchBar}
+        onChangeText={searchHandler}
+        value={searchString}
+      />
+      <TouchableOpacity style={styles.clearSearch} onPress={clearSearchHandler}>
+        <Feather name="x" size={20} />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 function Languages({ navigation }) {
+  const [searchString, setSearchString] = useState("");
+  const [listItems, setListItems] = useState(data);
   const [mode, setMode] = useState("from");
   const { languageInfo, setLanguageInfo } = useContext(LanguageInfoContext);
+
+  useEffect(() => {}, [searchString]);
+
+  const searchHandler = (string) => {
+    const filteredItems = data.filter((item) =>
+      RegExp(searchString, "i").test(item[0])
+    );
+    setListItems(filteredItems);
+    setSearchString(string);
+  };
 
   const languageSelectHandler = (item) => {
     setMode((prev) => (prev === "from" ? "to" : "from"));
     setLanguageInfo((prev) => ({ ...prev, [mode]: item }));
   };
 
+  const clearSearchHandler = () => {
+    setSearchString("");
+    setListItems(data);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        searchString={searchString}
+        searchHandler={searchHandler}
+        clearSearchHandler={clearSearchHandler}
+        navigateBack={() => navigation.navigate("Camera")}
+      />
       <FlatList
-        data={data}
+        data={listItems}
         renderItem={({ item }) => (
           <Language info={item} updateLanguage={languageSelectHandler} />
         )}
         keyExtractor={(item) => item[1]}
+        style={styles.list}
       />
       <LanguageTaskbar
         mode={mode}
         setMode={setMode}
         languageInfo={languageInfo}
       />
-      <TouchableOpacity
-        style={styles.closeBtn}
-        onPress={() => navigation.navigate("Camera")}
-      >
-        <Feather name="x" size={22} />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-    paddingBottom: 80,
-  },
-  listItem: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-  closeBtn: {
-    position: "absolute",
-    // top: (StatusBar.currentHeight || 0) + 10,
-    top: 10,
-    right: 20,
-    padding: 15,
-    borderRadius: 100,
-    backgroundColor: "#000",
-  },
-});
 
 export default Languages;

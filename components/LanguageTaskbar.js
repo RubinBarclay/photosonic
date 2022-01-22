@@ -9,7 +9,6 @@ function LanguageTaskbar({ languageInfo, mode, setMode }) {
         style={{
           ...styles.tab,
           backgroundColor: mode === "from" ? "#333" : null,
-          // opacity: active === "from" ? 1 : 0.5,
         }}
       >
         <Text style={styles.textSmall}>From</Text>
@@ -22,7 +21,6 @@ function LanguageTaskbar({ languageInfo, mode, setMode }) {
         style={{
           ...styles.tab,
           backgroundColor: mode === "to" ? "#333" : null,
-          // opacity: active === "to" ? 1 : 0.5,
         }}
       >
         <Text style={styles.textSmall}>To</Text>
@@ -46,7 +44,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   tab: {
-    // flexGrow: 1,
     width: "50%",
     paddingTop: 12,
     paddingHorizontal: 20,

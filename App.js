@@ -18,17 +18,6 @@ function App() {
     [languageInfo]
   );
 
-  // // Get current language (locale) from users phone
-  // // Set that locale as default (source) lang when displaying object label
-  // useEffect(() => {
-  //   const deviceLanguage =
-  //     Platform.OS === "ios"
-  //       ? NativeModules.SettingsManager.settings.AppleLocale ||
-  //         NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
-  //       : NativeModules.I18nManager.localeIdentifier;
-  //   console.log(deviceLanguage); //en_GB
-  // }, []);
-
   return (
     <LanguageInfoContext.Provider value={value}>
       <NavigationContainer>
