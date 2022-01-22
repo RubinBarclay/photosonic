@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
@@ -37,6 +38,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
+  },
+  flashBtn: {
+    position: "absolute",
+    top: 160,
+    right: 8,
+  },
+  flipBtn: {
+    position: "absolute",
+    top: 200,
+    right: 8,
   },
 });
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useContext } from "react";
-import { Camera as PhoneCamera } from "expo-camera";
+import { Camera as CameraComponent } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -8,6 +8,7 @@ import config from "../../config.json";
 import CameraTaskbar from "../../components/CameraTaskbar";
 import LanguageInfoContext from "../../context/languageInfoContext";
 import { useIsFocused } from "@react-navigation/core";
+import { Feather } from "@expo/vector-icons";
 
 function Camera({ navigation }) {
   const [cameraAccess, setCameraAccess] = useState(false);
@@ -16,6 +17,12 @@ function Camera({ navigation }) {
   const [base64, setBase64] = useState(null);
   const [identifiedObject, setIdentifiedObject] = useState("");
   const [translatedObject, setTranslatedObject] = useState("");
+  const [flashMode, setFlashMode] = useState(
+    CameraComponent.Constants.FlashMode.off
+  );
+  const [cameraType, setCameraType] = useState(
+    CameraComponent.Constants.Type.back
+  );
 
   const { languageInfo } = useContext(LanguageInfoContext);
   const cameraRef = useRef(null);
@@ -26,7 +33,7 @@ function Camera({ navigation }) {
   }, []);
 
   const requestCameraAccess = async () => {
-    const { status } = await PhoneCamera.requestCameraPermissionsAsync();
+    const { status } = await CameraComponent.requestCameraPermissionsAsync();
     setCameraAccess(status === "granted");
   };
 
@@ -80,6 +87,22 @@ function Camera({ navigation }) {
     setTranslatedObject(data.data.translations[0].translatedText);
   };
 
+  const toggleCameraTypeHandler = () => {
+    setCameraType(
+      cameraType === CameraComponent.Constants.Type.back
+        ? CameraComponent.Constants.Type.front
+        : CameraComponent.Constants.Type.back
+    );
+  };
+
+  const toggleFlashHandler = () => {
+    setFlashMode(
+      flashMode === CameraComponent.Constants.FlashMode.off
+        ? CameraComponent.Constants.FlashMode.on
+        : CameraComponent.Constants.FlashMode.off
+    );
+  };
+
   return cameraAccess ? (
     <View style={styles.container}>
       {showPreview && picture ? (
@@ -120,8 +143,32 @@ function Camera({ navigation }) {
             </>
           )}
         </ImageBackground>
-      ) : isFocused ? ( // isFocused unsures the camera mounts when navigating
-        <PhoneCamera style={styles.camera} ref={cameraRef} />
+      ) : isFocused ? ( // isFocused ensures the camera mounts when navigating
+        <>
+          <CameraComponent
+            style={styles.camera}
+            ref={cameraRef}
+            autoFocus="on"
+            type={cameraType}
+            flashMode={flashMode}
+          />
+          <TouchableOpacity
+            style={styles.flashBtn}
+            onPress={toggleFlashHandler}
+          >
+            {flashMode === CameraComponent.Constants.FlashMode.off ? (
+              <Feather name="zap" size={24} />
+            ) : (
+              <Feather name="zap-off" size={24} />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.flipBtn}
+            onPress={toggleCameraTypeHandler}
+          >
+            <Feather name="refresh-ccw" size={24} />
+          </TouchableOpacity>
+        </>
       ) : null}
       <CameraTaskbar
         navigation={navigation}
