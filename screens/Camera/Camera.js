@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { Camera as CameraComponent } from "expo-camera";
 import { StatusBar } from "expo-status-bar";
-import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./Camera.styles";
 import config from "../../config.json";
@@ -14,6 +20,7 @@ import theme from "../../theme.styles";
 function Camera({ navigation }) {
   const [cameraAccess, setCameraAccess] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const [picture, setPicture] = useState(null);
   const [base64, setBase64] = useState(null);
   const [identifiedObject, setIdentifiedObject] = useState("");
@@ -33,30 +40,41 @@ function Camera({ navigation }) {
     requestCameraAccess();
   }, []);
 
+  useEffect(() => {
+    setShowLoading(false);
+  }, [translatedObject]);
+
   const requestCameraAccess = async () => {
     const { status } = await CameraComponent.requestCameraPermissionsAsync();
     setCameraAccess(status === "granted");
   };
 
   const takePicture = async () => {
+    // setShowLoading(true);
     const picture = await cameraRef.current.takePictureAsync();
-    const manipulatedPicture = await ImageManipulator.manipulateAsync(
-      picture.uri,
-      [],
-      { base64: true, compress: 0.65, format: "jpeg" }
-    );
     setPicture(picture);
-    setBase64(manipulatedPicture.base64);
     setShowPreview(true);
+    convertImageToBase64(picture);
   };
 
   const closePreview = () => {
     setPicture(null);
     setShowPreview(false);
     setIdentifiedObject("");
+    setTranslatedObject("");
+  };
+
+  const convertImageToBase64 = async (picture) => {
+    const manipulatedPicture = await ImageManipulator.manipulateAsync(
+      picture.uri,
+      [],
+      { base64: true, compress: 0.65, format: "jpeg" }
+    );
+    setBase64(manipulatedPicture.base64);
   };
 
   const callGoogleCloudVision = async () => {
+    setShowLoading(true);
     const response = await fetch(
       config.googleCloud.cloudVisionApi + config.googleCloud.apiKey,
       {
@@ -116,12 +134,18 @@ function Camera({ navigation }) {
           }}
           source={picture}
         >
-          {identifiedObject !== "" && translatedObject !== "" && (
+          {identifiedObject !== "" && translatedObject !== "" ? (
             <>
               <Text style={styles.translationPopup}>{identifiedObject}</Text>
               <Text style={styles.translationPopup}>{translatedObject}</Text>
             </>
-          )}
+          ) : showLoading ? (
+            <ActivityIndicator
+              size="large"
+              color={theme.purple}
+              style={styles.spinner}
+            />
+          ) : null}
         </ImageBackground>
       ) : isFocused ? ( // isFocused ensures the camera mounts when navigating
         <>
