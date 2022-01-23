@@ -8,9 +8,10 @@ import {
   TextInput,
   View,
 } from "react-native";
-import LanguageTaskbar from "../../components/LanguageTaskbar";
+import LanguageTaskbar from "../../components/LanguageTaskbar/LanguageTaskbar";
 import LanguageInfoContext from "../../context/languageInfoContext";
 import styles from "./Languages.styles";
+import theme from "../../theme.styles";
 import data from "./data";
 
 function Language({ info, updateLanguage }) {
@@ -34,7 +35,7 @@ function Header({
   return (
     <View style={styles.topBar}>
       <TouchableOpacity style={styles.backBtn} onPress={navigateBack}>
-        <Feather name="arrow-left" size={32} />
+        <Feather name="arrow-left" size={32} color={theme.black} />
       </TouchableOpacity>
       <TextInput
         placeholder="Search"
@@ -43,7 +44,7 @@ function Header({
         value={searchString}
       />
       <TouchableOpacity style={styles.clearSearch} onPress={clearSearchHandler}>
-        <Feather name="x" size={20} />
+        <Feather name="x" size={20} color={theme.black} />
       </TouchableOpacity>
     </View>
   );

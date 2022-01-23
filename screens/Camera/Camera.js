@@ -5,10 +5,11 @@ import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./Camera.styles";
 import config from "../../config.json";
-import CameraTaskbar from "../../components/CameraTaskbar";
+import CameraTaskbar from "../../components/CameraTaskbar/CameraTaskbar";
 import LanguageInfoContext from "../../context/languageInfoContext";
 import { useIsFocused } from "@react-navigation/core";
 import { Feather } from "@expo/vector-icons";
+import theme from "../../theme.styles";
 
 function Camera({ navigation }) {
   const [cameraAccess, setCameraAccess] = useState(false);
@@ -117,29 +118,8 @@ function Camera({ navigation }) {
         >
           {identifiedObject !== "" && translatedObject !== "" && (
             <>
-              <Text
-                style={{
-                  fontSize: 20,
-                  paddingVertical: 6,
-                  paddingHorizontal: 10,
-                  backgroundColor: "#222",
-                  borderRadius: 8,
-                }}
-              >
-                {identifiedObject}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20,
-                  paddingVertical: 6,
-                  paddingHorizontal: 10,
-                  backgroundColor: "#222",
-                  borderRadius: 8,
-                  marginTop: 12,
-                }}
-              >
-                {translatedObject}
-              </Text>
+              <Text style={styles.translationPopup}>{identifiedObject}</Text>
+              <Text style={styles.translationPopup}>{translatedObject}</Text>
             </>
           )}
         </ImageBackground>
@@ -157,16 +137,16 @@ function Camera({ navigation }) {
             onPress={toggleFlashHandler}
           >
             {flashMode === CameraComponent.Constants.FlashMode.off ? (
-              <Feather name="zap" size={24} />
+              <Feather name="zap" size={24} color={theme.white} />
             ) : (
-              <Feather name="zap-off" size={24} />
+              <Feather name="zap-off" size={24} color={theme.white} />
             )}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.flipBtn}
             onPress={toggleCameraTypeHandler}
           >
-            <Feather name="refresh-ccw" size={24} />
+            <Feather name="refresh-ccw" size={24} color={theme.white} />
           </TouchableOpacity>
         </>
       ) : null}

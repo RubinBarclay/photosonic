@@ -1,5 +1,7 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
+import styles from "./LanguageTaskbar.styles";
+import theme from "../../theme.styles";
 
 function LanguageTaskbar({ languageInfo, mode, setMode }) {
   return (
@@ -8,7 +10,7 @@ function LanguageTaskbar({ languageInfo, mode, setMode }) {
         onPress={() => setMode("from")}
         style={{
           ...styles.tab,
-          backgroundColor: mode === "from" ? "#333" : null,
+          borderColor: mode === "from" ? theme.purple : theme.white,
         }}
       >
         <Text style={styles.textSmall}>From</Text>
@@ -20,7 +22,7 @@ function LanguageTaskbar({ languageInfo, mode, setMode }) {
         onPress={() => setMode("to")}
         style={{
           ...styles.tab,
-          backgroundColor: mode === "to" ? "#333" : null,
+          borderColor: mode === "to" ? theme.purple : theme.white,
         }}
       >
         <Text style={styles.textSmall}>To</Text>
@@ -31,37 +33,5 @@ function LanguageTaskbar({ languageInfo, mode, setMode }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  taskbar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 80,
-
-    flex: 1,
-    flexDirection: "row",
-  },
-  tab: {
-    width: "50%",
-    paddingTop: 12,
-    paddingHorizontal: 20,
-  },
-  smallTab: {
-    backgroundColor: "orangered",
-    flexGrow: 0.4,
-    paddingTop: 12,
-  },
-  textSmall: {
-    fontSize: 15,
-    opacity: 0.5,
-    textAlign: "center",
-  },
-  textLarge: {
-    fontSize: 16,
-    textAlign: "center",
-  },
-});
 
 export default LanguageTaskbar;

@@ -1,5 +1,5 @@
 import { StyleSheet, StatusBar } from "react-native";
-// import { initialWindowMetrics } from "react-native-safe-area-context";
+import theme from "../../theme.styles";
 
 const styles = StyleSheet.create({
   container: {
@@ -9,43 +9,39 @@ const styles = StyleSheet.create({
   },
   topBar: {
     position: "relative",
-    // flexWrap: "wrap",
     alignItems: "center",
     flexDirection: "row",
-    padding: 5,
-    // flexDirection: "row",
-    // alignItems: "center",
-    // height: 40,
+    paddingHorizontal: 5,
+    paddingVertical: 8,
   },
   searchBar: {
-    // height: 40,
     flexGrow: 1,
     fontSize: 18,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "white",
+    backgroundColor: theme.white,
     borderRadius: 50,
-    color: "black",
+    color: theme.black,
   },
   backBtn: {
-    marginHorizontal: 5,
-    // width: 40,
-    // height: 40,
-    // backgroundColor: "#000",
+    marginRight: 5,
   },
   clearSearch: {
     position: "absolute",
     right: 25,
-    top: 18,
+    top: 22,
   },
   list: {
-    // marginTop: 40,
+    backgroundColor: theme.white,
   },
   listItem: {
-    backgroundColor: "#f9c2ff",
+    fontSize: 18,
     padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 12,
+    backgroundColor: theme.white,
+    color: theme.black,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.gray,
   },
   title: {
     fontSize: 32,

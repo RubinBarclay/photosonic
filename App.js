@@ -2,8 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Camera from "./screens/Camera/Camera.js";
 import Languages from "./screens/Languages/Languages.js";
-import { useEffect, useState, useMemo } from "react";
-import { NativeModules, Platform } from "react-native";
+import { useState, useMemo } from "react";
 import LanguageInfoContext from "./context/languageInfoContext.js";
 
 function App() {
