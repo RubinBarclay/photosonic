@@ -14,12 +14,12 @@ import styles from "./Languages.styles";
 import theme from "../../theme.styles";
 import data from "./data";
 
-function Language({ info, updateLanguage }) {
+function Language({ info, languageSelectHandler }) {
   return (
     <TouchableOpacity
       key={info[1]}
       style={styles.listItem}
-      onPress={() => updateLanguage(info)}
+      onPress={() => languageSelectHandler(info)}
     >
       <Text>{info[0]}</Text>
     </TouchableOpacity>
@@ -56,8 +56,6 @@ function Languages({ navigation }) {
   const [mode, setMode] = useState("from");
   const { languageInfo, setLanguageInfo } = useContext(LanguageInfoContext);
 
-  useEffect(() => {}, [searchString]);
-
   const searchHandler = (string) => {
     const filteredItems = data.filter((item) =>
       RegExp(searchString, "i").test(item[0])
@@ -69,6 +67,10 @@ function Languages({ navigation }) {
   const languageSelectHandler = (item) => {
     setMode((prev) => (prev === "from" ? "to" : "from"));
     setLanguageInfo((prev) => ({ ...prev, [mode]: item }));
+
+    if (mode === "to") {
+      navigation.navigate("Camera");
+    }
   };
 
   const clearSearchHandler = () => {
@@ -87,7 +89,7 @@ function Languages({ navigation }) {
       <FlatList
         data={listItems}
         renderItem={({ item }) => (
-          <Language info={item} updateLanguage={languageSelectHandler} />
+          <Language info={item} languageSelectHandler={languageSelectHandler} />
         )}
         keyExtractor={(item) => item[1]}
         style={styles.list}
