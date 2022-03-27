@@ -4,6 +4,7 @@ A mobile app that allows you to take pictures of objects and have it identify th
 #### Installable Android package for emulator or real device
 APK download url: https://expo.dev/artifacts/eas/nC659Ci9u68C6bH6CFYhBq.apk
 
+#### Preview
 <p>
   <img src="https://raw.githubusercontent.com/RubinBarclay/pictive/main/gif_20220123_161348.gif" width=48% height=60%>
   <img src="https://raw.githubusercontent.com/RubinBarclay/pictive/main/1642951152963.jpg" width=48% height=60%>
