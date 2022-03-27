@@ -1,7 +1,7 @@
 # pictive
 A mobile app that allows you to take pictures of objects and have it identify them object and then translate it for you into the language of your choice.
 
-#####Installable Android package for emulator or real device
+##### Installable Android package for emulator or real device
 APK download url: https://expo.dev/artifacts/eas/nC659Ci9u68C6bH6CFYhBq.apk
 
 <p>
